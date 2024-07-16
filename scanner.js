@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Make GET request with the barcode
-        fetch(`https://www.sfda.gov.sa/GetFoodFullSearch.php?Barcode=${decodedText}&RefNumber=&BrandName=&TradeName=&ItemDescription=`)
+        fetch(`https://www.sfda.gov.sa/GetFoodFullSearch.php?Barcode=6291003005978&RefNumber=&BrandName=&TradeName=&ItemDescription=`, {mode: 'no-cors'})
             .then(response => response.json())
             .then(data => {
                 console.log("Response from API:", data);
