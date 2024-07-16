@@ -1,24 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
-    Quagga.init({
-        inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: document.querySelector('#interactive')    // Or '#yourElement' (optional)
-        },
-        decoder: {
-            readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"]
-        }
-    }, function(err) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-    });
+    const html5QrCode = new Html5Qrcode("reader");
+    
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+        document.getElementById('result').innerText = `Detected EAN-13 code: ${decodedText}`;
+        // Stop scanning once a barcode is detected
+        html5QrCode.stop().then((ignore) => {
+            // QR Code scanning is stopped.
+        }).catch((err) => {
+            console.error("Error stopping the scanner: ", err);
+        });
+    };
 
-    Quagga.onDetected(function(data) {
-        console.log(data);
-        document.getElementById('result').innerText = `Detected: ${data.codeResult.code}`;
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    // If you want to prefer the rear camera
+    Html5Qrcode.getCameras().then(cameras => {
+        if (cameras && cameras.length) {
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                config, 
+                qrCodeSuccessCallback
+            ).catch(err => {
+                console.error("Error starting the scanner: ", err);
+            });
+        }
+    }).catch(err => {
+        console.error("Error getting cameras: ", err);
     });
 });
