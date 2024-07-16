@@ -1,15 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     const html5QrCode = new Html5Qrcode("reader");
-    
+
     const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         console.log(`Code matched = ${decodedText}`, decodedResult);
         document.getElementById('result').innerText = `Detected EAN-13 code: ${decodedText}`;
+
         // Stop scanning once a barcode is detected
         html5QrCode.stop().then((ignore) => {
             // QR Code scanning is stopped.
         }).catch((err) => {
             console.error("Error stopping the scanner: ", err);
         });
+
+        // Make GET request with the barcode
+        fetch(`https://www.sfda.gov.sa/GetFoodFullSearch.php?Barcode=${decodedText}&RefNumber=&BrandName=&TradeName=&ItemDescription=`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response from API:", data);
+                // You can process and store the response data as needed
+                document.getElementById('result').innerText += `\nResponse: ${JSON.stringify(data)}`;
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+                document.getElementById('result').innerText += `\nError: ${error}`;
+            });
     };
 
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
