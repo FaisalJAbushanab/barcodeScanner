@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Make GET request with the barcode
-        fetch(`https://us-central1-celiacers-app.cloudfunctions.net/product?barcode${decodedText}`, {mode: 'no-cors'})
+        fetch(`https://us-central1-celiacers-app.cloudfunctions.net/product?barcode=${decodedText}`, {mode: 'no-cors'})
             .then(response => response.json())
             .then(data => {
                 console.log("Response from API:", data);
