@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Make GET request with the barcode
         fetch(`https://us-central1-celiacers-app.cloudfunctions.net/product?barcode=${decodedText}`)
-            .then(response => response.text())
+            .then(response => JSON.parse(response.text()))
             .then(data => {
-                console.log("Response from API:", data);
+                console.log("Response from API:", data.results[0].brandName);
                 // You can process and store the response data as needed
-                document.getElementById('result').innerText += `\nResponse: ${JSON.parse(data)}`;
+                document.getElementById('result').innerText += `\nProduct Name: ${data.results[0].brandName}  \n Ingredients: ${data.results[0].ingredientsAr}`;
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
