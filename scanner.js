@@ -16,9 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`https://us-central1-celiacers-app.cloudfunctions.net/product?barcode=${decodedText}`)
             .then(response => response.text())
             .then(data => {
-                console.log("Response from API:", data.results[0].brandName);
+                console.log("Response from API:", typeof data, typeof JSON.parse(data), );
+                const object = JSON.parse(data)
                 // You can process and store the response data as needed
-                document.getElementById('result').innerText += `\nProduct Name: ${data.results[0].brandName}  \n Ingredients: ${data.results[0].ingredientsAr}`;
+                document.getElementById('result').innerText += `\n\n\nProduct Name: ${object.results[0].brandName}  \n Ingredients: ${object.results[0].ingredientsAr}`;
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
